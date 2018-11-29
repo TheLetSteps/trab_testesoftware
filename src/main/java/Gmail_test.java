@@ -55,7 +55,7 @@ public class Gmail_test {
 	        System.out.println("Falha de conexão!");
 	    }
 	}
-    public void login(String login_email,String login_pass) {
+    public void login(String login_email,String login_pass, boolean is_valid) {
 //    	CASO- 1. Checar se login e senha foram inseridos corretamente. 
 //    		Checar se o campo para inserir email existe e enviar o login
     	boolean login_sucess= false;
@@ -69,7 +69,6 @@ public class Gmail_test {
         catch(Throwable e)
          {
         	System.out.println("Campo email não encontrado.");
-        	assertEquals(login_sucess, true);
          }
 //		Checar se o botao de proximo existe
 	    try
@@ -82,7 +81,6 @@ public class Gmail_test {
 	    catch(Throwable e)
 	     {
 	    	System.out.println("Botão próximo não encontrado.");
-	    	assertEquals(login_sucess, true);
 	     }
 //		Submit Login
 	    try
@@ -94,38 +92,38 @@ public class Gmail_test {
 	    catch(Throwable e)
 	     {
 	    	System.out.println("Campo senha não encontrado ou email não existe");
-	    	assertEquals(login_sucess, true);
 	     }
 //		Teste de login
 	    try {
 		    driver.findElement(By.xpath("//*[@id='signIn']")).click();
 		    driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
+		    String current_url = driver.getCurrentUrl();
+			login_sucess= current_url.contains("inbox");
+			if(login_sucess) {
+				System.out.println("Login efetuado!");
+			}
+			else {
+				System.out.println("Erro ao efetuar login!");
+			}
 	    }
 	    catch(Throwable e)
 	     {
 	    	System.out.println("Erro ao efetuar login!");
-	    	assertEquals(login_sucess, true);
 	     }
-	    String current_url = driver.getCurrentUrl();
-		login_sucess= current_url.contains("inbox");
-		if(login_sucess) {
-			System.out.println("Login efetuado com sucesso!");
-			assertEquals(login_sucess, true);
-		}
-		else {
-			System.out.println("Erro ao efetuar login!");
-			assertEquals(login_sucess, true);
-		}
+	    if (login_sucess == is_valid) {
+	    	System.out.println("Teste efetuado com sucesso!");
+	    }
+	    assertEquals(login_sucess, is_valid);
 		driver.close();
 }
     @Test
 	public void test() {
-    	System.out.println("Testando login válido");
-    	login(this.login_email_valido,this.login_pass_valido);
-    	System.out.println("Testando login inválido");
-    	login(this.login_email_invalido,this.login_pass_invalido);
-    	System.out.println("Testando login inválido  2");
-    	login(this.login_email_invalido2,this.login_pass_invalido2);
+    	System.out.println("Testando login válido...");
+    	login(this.login_email_valido,this.login_pass_valido,true);
+    	System.out.println("Testando login inválido...");
+    	login(this.login_email_invalido,this.login_pass_invalido,false);
+    	System.out.println("Testando login inválido  2...");
+    	login(this.login_email_invalido2,this.login_pass_invalido2,false);
 	}
 
 }
