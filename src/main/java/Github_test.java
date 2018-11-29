@@ -10,13 +10,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class TestWEB {
+public class Github_test {
 		
 	WebDriver driver;
-	private String url = "http://localhost:8080/TrabalhoTesteSoftware/index.jsp";
+	private String url = "https://github.com/";
 
 	private String login_email = "lucas.alsilva01@gmail.com";
-	private String login_pass = "123456";
+	private String login_pass = "testesoft3s";
 	
     @Before
     public void start() throws Throwable {
@@ -34,30 +34,37 @@ public class TestWEB {
  
         Thread.sleep(1000);
         if (driver.getPageSource().contains("linkedin")) {
-            System.out.println("Pass");
+            System.out.println("Entrou site");
         } else {
-            System.out.println("Fail");
+            System.out.println("Falhar de conexão!");
         }
     }
-    
-    @Test
-	public void test() {
-    	System.out.println("Testando...");
-    	
-    	driver.findElement(By.id("login-email")).sendKeys(login_email);
+    public void login() {
+    	String login_url = "https://github.com/login";
+    	driver.get(login_url);
+        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
+         
+    	driver.findElement(By.id("login_field")).sendKeys(login_email);
 		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
 
-		driver.findElement(By.id("login-password")).sendKeys(login_pass);
+		driver.findElement(By.id("password")).sendKeys(login_pass);
 		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
 //		
-		driver.findElement(By.id("login-submit")).click();
+		driver.findElement(By.name("commit")).click();
 		driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
-		String current_url = driver.getCurrentUrl();
-		boolean login_sucess= !current_url.contains("unexpected_error");
-		System.out.println(login_sucess);
-		assertEquals(login_sucess, true);
+		boolean login_sucess= driver.getPageSource().contains("Signed in");
 		if(login_sucess) {
 			System.out.println("Login efetuado com sucesso!");
 		}
+		else {
+			System.out.println("Erro ao efetuar login!");
+		}
+		assertEquals(login_sucess, true);
+
+    }
+    @Test
+	public void test() {
+    	System.out.println("Testando login..");
+    	login();
 	}	
 }
